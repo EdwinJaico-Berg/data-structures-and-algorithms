@@ -28,6 +28,27 @@ class DynamicArray:
         self._A[self._n] = obj
         self._n += 1
 
+    def insert(self, k, value):
+        """Insert value at index k, shifting subsequent values rightward."""
+        # assume 0 <= k < self._n
+        if self._n == self._capacity:
+            self._resize(2 * self._capacity)
+        for j in range(self._n, k, -1):
+            self._A[j] = self.A[j-1]
+        self._A[k] = value
+        self._n += 1
+
+    def remove(self, value):
+        """Remove the first occurrence of value (or raise ValueError)."""
+        for k in range(self._n):
+            if self._A[k] == value:
+                for j in range(k, self._n - 1):
+                    self._A[j] = self._A[j + 1]
+                self._A[self._n - 1] = None
+                self._n -= 1
+                return 0
+        raise ValueError('value not found')
+
     def _resize(self, c):
         """Resize internal array to capacity c."""
         B = self._make_array(c)
@@ -43,8 +64,7 @@ class DynamicArray:
 
 if __name__ == "__main__""":
     data = DynamicArray()
-    for _ in range(10):
-        a = len(data)
-        b = sys.getsizeof(data)
-        print(f'Length: {a}; Size in bytes: {b}')
-        data.append(None)
+    data.append(2)
+    data.append(3)
+    data.append(4)
+    data.remove(3)
