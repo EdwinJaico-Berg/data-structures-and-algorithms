@@ -31,7 +31,6 @@ class BinaryTree(Tree):
             else:
                 return self.left(parent)            # possibly None
 
-
     def children(self, p):
         """Generate an iteration of Positions representing p's children."""
         if self.left(p):
