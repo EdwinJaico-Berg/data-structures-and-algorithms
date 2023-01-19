@@ -1,3 +1,6 @@
+from linked_queue import LinkedQueue
+
+
 class Tree:
     """Abstract base class representing a tree structure."""
 
@@ -71,3 +74,51 @@ class Tree:
         if not p:
             p = self.root()
         return self._height(p)
+
+    def __iter__(self):
+        """Generate an iteration of the tree's elements."""
+        for p in self.positions():      # use same order as positions
+            yield p.element()           # but yield each element
+
+    def positions(self):
+        """Generate an iteration of all the tree's positions"""
+        # return self.preorder()
+        # return self.postoder()
+        pass
+
+    def preorder(self):
+        """Generate a preorder (starts with root) iteration of positions in the tree."""
+        if not self.is_empty():
+            for p in self._subtree_preorder(self.root()):
+                yield p
+
+    def _subtree_preorder(self, p):
+        """Generate a preorder iteration of positions in subtree rooted at p."""
+        yield p                                         # visit p before its subtrees
+        for c in self.children(p):                      # for each child c
+            for other in self._subtree_preorder(c):     # do preorder of c's subtree
+                yield other                             # yielding each to caller
+
+    def postorder(self):
+        """Generate a postorder iteration of positions in the tree."""
+        if not self.is_empty():
+            for p in self._subtree_postorder(self.root()):
+                yield p
+
+    def _subtree_postorder(self, p):
+        """Generate a postorder iteration of positions in subtree rooted at p."""
+        for c in self.children(p):
+            for other in self._subtree_postorder(c):
+                yield other
+        yield p
+
+    def breadth_first(self):
+        """Generate a breadth-first iteration of the positions of the tree."""
+        if not self.is_empty():
+            fringe = LinkedQueue()
+            fringe.enqueue(self.root())
+            while not fringe.is_empty():
+                p = fringe.dequeue()
+                yield p
+                for c in self.children(p):
+                    fringe.enqueue(c)
